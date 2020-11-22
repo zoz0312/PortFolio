@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { CommonModule } from './common/common.module';
+import { GraphQLModule } from '@nestjs/graphql';
 
 @Module({
   imports: [
@@ -35,6 +36,18 @@ import { CommonModule } from './common/common.module';
       entities: [
         User,
       ],
+    }),
+    GraphQLModule.forRoot({
+      autoSchemaFile: true,
+      context: ({
+        req,
+        connection,
+      }) => {
+        const TOKEN_KEY = 'x-jwt';
+        return {
+          token: req ? req.headers[TOKEN_KEY] : connection.context['X-JWT']
+        }
+      },
     }),
     UsersModule,
     CommonModule
