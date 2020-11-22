@@ -39,7 +39,7 @@ export class User extends CoreEntity {
     { description: 'User salt key' },
   )
   @IsString()
-  gensalt: string;
+  saltkey: string;
 
   @Column({ type: 'enum', enum: UserRole })
   @Field(type => UserRole)
@@ -49,11 +49,11 @@ export class User extends CoreEntity {
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword(): Promise<void> {
-    const gen_pw = bcrypt.gensalt();
-    console.log('gen_pw', gen_pw)
     if (this.password) {
       try {
-        this.password = await bcrypt.hash(this.password, 10);
+        const saltKey = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, saltKey);
+        this.saltkey = saltKey;
       } catch (e) {
         console.log('hashPassword Error', e)
         throw new InternalServerErrorException();

@@ -1,18 +1,55 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { invalidError, permossionError } from 'src/common/error-text';
+import { Repository } from 'typeorm';
 import { CreateUserInput, CreateUserOutput } from './dto/create-user.dto';
 import { UpdateUserInput } from './dto/update-user.input';
+import { User, UserRole } from './entities/user.entity';
+import { errorUser } from './user-text';
 
 @Injectable()
 export class UsersService {
+  constructor(
+    @InjectRepository(User)
+    private readonly users: Repository<User>,
+  ) {}
   async createUser(
-    createUserInput: CreateUserInput
+    { email, password, role }: CreateUserInput
   ): Promise<CreateUserOutput> {
     try {
+      const user = await this.users.findOne(
+        { email },
+      );
+      if (user) {
+        return {
+          ok: false,
+          error: errorUser.already,
+        }
+      }
 
+      if (role === UserRole.Admin) {
+        return {
+          ok: false,
+          error: invalidError,
+        }
+      }
+
+      const saved = await this.users.save(
+        this.users.create({
+          email,
+          password,
+          role,
+        })
+      );
+      console.log('saved', saved)
+
+      return {
+        ok: true,
+      }
     } catch {
       return {
         ok: false,
-        error: `허용할 수 없는 접근입니다.`,
+        error: permossionError,
       }
     }
   }
