@@ -11,19 +11,18 @@ type Props = {
 const MainAnimation: React.FC<Props> = (
   { children, location }
 ): JSX.Element => {
-  console.log('location', location)
   return (
-    <TransitionGroup>
-      <CSSTransition
-        key={location?.key}
-        // timeout={{ enter: 300, exit: 300 }}
-        // classNames="page"
-        timeout={1000}
-        classNames="frame"
-      >
-        {children}
-      </CSSTransition>
-    </TransitionGroup>
+    <div className="container">
+      <TransitionGroup>
+        <CSSTransition
+          key={location?.key}
+          timeout={500}
+          classNames="frame"
+        >
+          {children}
+        </CSSTransition>
+      </TransitionGroup>
+    </div>
   );
 }
 

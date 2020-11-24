@@ -9,16 +9,20 @@ import MainAnimation from '../components/animations/main.animation';
 const Root: React.FC<RouteProps> = (
   { location }
 ): JSX.Element => {
+  // console.log('location', location)
+  // TODO : Pagenation
   return (
-    <MainAnimation location={location}>
-      <Switch location={location}>
-        <Route exact path="/" component={Main} />
-        <Route path="/aju" component={AJu} />
-        <Route path="/euri" component={EuRi} />
-        <Route path="/home" exact component={Home} />
-        <Redirect path="*" to="/" />
-      </Switch>
-    </MainAnimation>
+    <>
+      <MainAnimation location={location}>
+        <Switch location={location}>
+          <Route exact path="/" component={Main} />
+          <Route path="/aju" component={AJu} />
+          <Route path="/euri" component={EuRi} />
+          <Route path="/home" exact component={Home} />
+          <Redirect path="*" to="/" />
+        </Switch>
+      </MainAnimation>
+    </>
   )
 };
 

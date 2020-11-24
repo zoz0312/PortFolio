@@ -7,8 +7,8 @@ import MainAnimation from '@components/animations/main.animation';
 
 function Main() {
   return (
-    <div className="container">
-      <header className="Main-heade">
+    <div>
+      <header className="Main-header">
         Header
       </header>
       <div className="flex-container">
