@@ -1,11 +1,13 @@
-import React from 'react';
+import { BrowserRouter, Route } from 'react-router-dom';
 import './App.scss';
 import Root from './pages';
 
-function App() {
+function App({}) {
   return (
     <div className="App">
-      <Root />
+      <BrowserRouter>
+        <Route render={Root} />
+      </BrowserRouter>
     </div>
   );
 }

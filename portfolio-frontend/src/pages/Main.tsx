@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
 import './Main.scss'
+import MainAnimation from '@components/animations/main.animation';
 
 function Main() {
   return (

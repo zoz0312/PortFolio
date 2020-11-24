@@ -1,0 +1,38 @@
+.page-enter {
+  opacity: 0.01;
+  transform: scale(1.1);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: all 300ms;
+}
+
+.page-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.page-exit-active {
+  opacity: 0.01;
+  transform: scale(1.1);
+  transition: all 300ms;
+}
+
+.frame-enter {
+  position: absolute;
+  opacity: 0;
+}
+.frame-enter-active {
+  opacity: 1;
+  transition: opacity 2s;
+}
+.frame-exit {
+  position: absolute;
+  opacity: 1;
+}
+.frame-exit-active {
+  opacity: 0;
+  transition: opacity 22s;
+}

@@ -1,6 +1,7 @@
 import { Route, RouteComponentProps } from "react-router-dom"
 import Home from './aju.Home';
 import About from './aju.About';
+import MainAnimation from '@components/animations/main.animation';
 
 const AJu: React.FC<RouteComponentProps> = (
   { match }: RouteComponentProps,
