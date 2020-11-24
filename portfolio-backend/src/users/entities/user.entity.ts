@@ -18,26 +18,32 @@ registerEnumType(UserRole, { name: 'UserRole' });
 @Entity()
 export class User extends CoreEntity {
   @Column({ unique: true })
-  @Field(
-    type => String,
-    { description: 'User Email' },
-  )
+  @Field(type => String, {
+    description: 'User Email'
+  })
   @IsEmail()
   email: string;
 
+  @Column({ nullable: true })
+  @Field(type => String, {
+    description: 'User NickName',
+    nullable: true
+  })
+  @IsString()
+  name?: string;
+
+
   @Column({ select: false })
-  @Field(
-    type => String,
-    { description: 'User Password' },
-  )
+  @Field(type => String, {
+    description: 'User Password'
+  })
   @IsString()
   password: string;
 
   @Column({ select: false })
-  @Field(
-    type => String,
-    { description: 'User salt key' },
-  )
+  @Field(type => String, {
+    description: 'User salt key'
+  })
   @IsString()
   saltkey: string;
 

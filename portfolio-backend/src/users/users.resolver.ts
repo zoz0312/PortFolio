@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
 import { CreateUserInput, CreateUserOutput } from './dto/create-user.dto';
+import { FindUserInput, FindUserOutput } from './dto/find-user.dto';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -20,11 +21,11 @@ export class UsersResolver {
     return this.usersService.findAll();
   }
 
-  @Query(() => User, { name: 'user' })
-  findOne(
-    @Args('id', { type: () => Int }) id: number,
-  ) {
-    return this.usersService.findOne(id);
+  @Query(returns => FindUserOutput, { name: 'user' })
+  async findOne(
+    @Args('input') findUserInput: FindUserInput,
+  ): Promise<FindUserOutput> {
+    return this.usersService.findOne(findUserInput);
   }
 
   @Mutation(() => User)

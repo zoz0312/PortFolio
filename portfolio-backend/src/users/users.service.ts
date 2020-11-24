@@ -6,6 +6,7 @@ import { CreateUserInput, CreateUserOutput } from './dto/create-user.dto';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User, UserRole } from './entities/user.entity';
 import { errorUser } from './user-text';
+import { FindUserInput, FindUserOutput } from './dto/find-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -14,7 +15,7 @@ export class UsersService {
     private readonly users: Repository<User>,
   ) {}
   async createUser(
-    { email, password, role }: CreateUserInput
+    { email, name, password, role }: CreateUserInput
   ): Promise<CreateUserOutput> {
     try {
       const user = await this.users.findOne(
@@ -23,7 +24,7 @@ export class UsersService {
       if (user) {
         return {
           ok: false,
-          error: errorUser.already,
+          error: errorUser.alreadyEmail,
         }
       }
 
@@ -34,14 +35,14 @@ export class UsersService {
         }
       }
 
-      const saved = await this.users.save(
+      await this.users.save(
         this.users.create({
           email,
+          name,
           password,
           role,
         })
       );
-      console.log('saved', saved)
 
       return {
         ok: true,
@@ -58,8 +59,21 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(
+    { id }: FindUserInput
+  ): Promise<FindUserOutput> {
+    try {
+      const user = await this.users.findOneOrFail({ id });
+      return {
+        ok: true,
+        user,
+      }
+    } catch {
+      return {
+        ok: false,
+        error: permossionError,
+      }
+    }
   }
 
   update(id: number, updateUserInput: UpdateUserInput) {
