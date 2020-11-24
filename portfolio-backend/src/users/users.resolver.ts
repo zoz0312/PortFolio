@@ -4,6 +4,7 @@ import { User } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
 import { CreateUserInput, CreateUserOutput } from './dto/create-user.dto';
 import { FindUserInput, FindUserOutput } from './dto/find-user.dto';
+import { FindUsersOutput, FindUsersInput } from './dto/find-usres.dto';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -16,9 +17,11 @@ export class UsersResolver {
     return this.usersService.createUser(createUserInput);
   }
 
-  @Query(() => [User], { name: 'users' })
-  findAll() {
-    return this.usersService.findAll();
+  @Query(returns => FindUsersOutput, { name: 'users' })
+  async findAll(
+    @Args('input') findUsersInput: FindUsersInput,
+  ): Promise<FindUsersOutput> {
+    return this.usersService.findAll(findUsersInput);
   }
 
   @Query(returns => FindUserOutput, { name: 'user' })
