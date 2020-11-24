@@ -6,7 +6,6 @@ import AJu from '@pages/aju/index';
 import EuRi from '@pages/euri/index';
 
 const Root: React.FC = () => (
-  // TODO 루트 라우터를 반환한다
   <BrowserRouter>
     <Switch>
       <Route exact path="/" component={Main} />

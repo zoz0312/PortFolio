@@ -1,7 +1,18 @@
-.container {
-  max-width: 1200px;
-  margin: auto;
+@import '../mixin';
+
+@include L {
+  .container {
+    max-width: 1200px;
+    margin: auto;
+  }
 }
+@include S {
+  .container {
+    max-width: 300px;
+    margin: auto;
+  }
+}
+
 
 .Main-header {
   background-color: #282c34;

@@ -1,0 +1,22 @@
+// Breakpoints
+$S: 335px;
+$M: 758px;
+$L: 1024px;
+
+@mixin S {
+  @media (min-width: #{$S}) and (max-width: #{$M - 1px}) {
+    @content;
+  }
+}
+
+@mixin M {
+  @media (min-width: #{$M}) and (max-width: #{$L - 1px}) {
+    @content;
+  }
+}
+
+@mixin L {
+  @media (min-width: #{$L}) {
+    @content;
+  }
+}
