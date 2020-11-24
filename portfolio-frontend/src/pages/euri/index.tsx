@@ -1,8 +1,8 @@
 import { Route, RouteComponentProps } from "react-router-dom"
-import Home from './aju.Home';
-import About from './aju.About';
+import Home from './euri.Home';
+import About from './euri.About';
 
-const AJu: React.FC<RouteComponentProps> = (
+const EuRi: React.FC<RouteComponentProps> = (
   { match }: RouteComponentProps,
 ): JSX.Element => {
   return (
@@ -13,4 +13,4 @@ const AJu: React.FC<RouteComponentProps> = (
   );
 }
 
-export default AJu;
+export default EuRi;
