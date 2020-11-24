@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import Home from './Home';
-import Main from './Main';
-import AJu from './aju/index';
+import Home from '@pages/Home';
+import Main from '@pages/Main';
+import AJu from '@pages/aju/index';
 
 const Root: React.FC = () => (
   // TODO 루트 라우터를 반환한다
