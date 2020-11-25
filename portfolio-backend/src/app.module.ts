@@ -10,22 +10,24 @@ import { JwtModule } from './jwt/jwt.module';
 import { AuthModule } from './auth/auth.module';
 import { LoggerModule } from './logger/logger.module';
 import { LoggerMiddleware } from './logger/logger.middleware';
+import { GlobalLogger } from './logger/entities/logger.global';
+import { GraphqlLogger } from './logger/entities/logger.graphql'
 
 @Module({
   imports: [
-  ConfigModule.forRoot({
+    ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
-      ignoreEnvFile: process.env.NODE_ENV === 'prod',
-      validationSchema: Joi.object({
-        NODE_ENV: Joi.string().valid('dev', 'prod', 'test').required(),
-        DB_HOST: Joi.string().required(),
-        DB_PORT: Joi.string().required(),
-        DB_USERNAME: Joi.string().required(),
-        DB_DATABASE: Joi.string().required(),
-        DB_PASSWORD: Joi.string().required(),
-        PRIVATE_KEY: Joi.string().required(),
-      }),
+        envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
+        ignoreEnvFile: process.env.NODE_ENV === 'prod',
+        validationSchema: Joi.object({
+          NODE_ENV: Joi.string().valid('dev', 'prod', 'test').required(),
+          DB_HOST: Joi.string().required(),
+          DB_PORT: Joi.string().required(),
+          DB_USERNAME: Joi.string().required(),
+          DB_DATABASE: Joi.string().required(),
+          DB_PASSWORD: Joi.string().required(),
+          PRIVATE_KEY: Joi.string().required(),
+        }),
     }),
     TypeOrmModule.forRoot({
       type: "postgres",
@@ -38,6 +40,8 @@ import { LoggerMiddleware } from './logger/logger.middleware';
       logging: process.env.NODE_ENV === 'dev',
       entities: [
         User,
+        GlobalLogger,
+        GraphqlLogger,
       ],
     }),
     GraphQLModule.forRoot({
@@ -70,6 +74,6 @@ export class AppModule implements NestModule {
       .forRoutes({
         path: '*',
         method: RequestMethod.ALL,
-      });;
+      });
   }
 }

@@ -13,7 +13,7 @@ import { TOTAL_PAGES } from '../common/common.pagenation';
 import { DeleteUserIntput, DeleteUserOutput } from './dto/delete-user.dto';
 import { LoginInput, LoginOutput } from './dto/login-user.dto';
 import { JwtService } from '../jwt/jwt.service';
-import { MyLogger } from '../logger/logger.service';
+import { MyLoggerService } from '../logger/logger.service';
 
 @Injectable()
 export class UsersService {
@@ -21,9 +21,10 @@ export class UsersService {
     @InjectRepository(User)
     private readonly users: Repository<User>,
     private readonly jwtService: JwtService,
-  ) {}
-
-  private readonly logger = new MyLogger(UsersService.name);
+    // private readonly logger: MyLoggerService,
+  ) {
+    // this.logger.setContext(UsersService.name);
+  }
 
   async createUser(
     { email, name, password, role }: CreateUserInput
@@ -55,9 +56,9 @@ export class UsersService {
         })
       );
 
-      this.logger.log({
-        message: 'create user'
-      })
+      // this.logger.log({
+      //   message: 'create user'
+      // })
 
       return {
         ok: true,

@@ -1,23 +1,29 @@
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
+import { GraphqlLogger } from './entities/logger.graphql';
+import { Injectable } from '@nestjs/common';
 
 interface DefaultLog {
   message: string,
   user?: User,
 }
 
-export class MyLogger {
+@Injectable()
+export class MyLoggerService {
   context?: string;
 
   constructor(
-    context?: string
-  ) {
-    this.context = context;
-  };
+    @InjectRepository(GraphqlLogger)
+    private readonly graphqlLogger: Repository<GraphqlLogger>,
+  ) {};
 
   log(log: DefaultLog): void {
     // Insert DB
+    console.log('graphqlLogger,', this.graphqlLogger)
+    // this.graphqlLogger.create();
     console.log('log', log);
-    console.log('context', this.context)
+    // console.log('context', this.context)
   }
 
   error(log: DefaultLog) {
@@ -29,5 +35,9 @@ export class MyLogger {
   warn(log: DefaultLog) {
     // console.log('log warn =>', message)
     /* your implementation */
+  }
+
+  setContext(context: string) {
+    this.context = context;
   }
 }
