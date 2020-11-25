@@ -6,6 +6,7 @@ import { CreateUserInput, CreateUserOutput } from './dto/create-user.dto';
 import { FindUserInput, FindUserOutput } from './dto/find-user.dto';
 import { FindUsersOutput, FindUsersInput } from './dto/find-usres.dto';
 import { DeleteUserOutput, DeleteUserIntput } from './dto/delete-user.dto';
+import { LoginOutput, LoginInput } from './dto/login-user.dto';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -44,5 +45,12 @@ export class UsersResolver {
     @Args('input') deleteUserIntput: DeleteUserIntput,
   ): Promise<DeleteUserOutput> {
     return this.usersService.delete(deleteUserIntput);
+  }
+
+  @Query(returns => LoginOutput)
+  async login(
+    @Args('input') loginInput: LoginInput,
+  ): Promise<LoginOutput> {
+    return this.usersService.login(loginInput);
   }
 }

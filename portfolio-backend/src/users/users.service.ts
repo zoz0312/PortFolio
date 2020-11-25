@@ -11,12 +11,15 @@ import { FindUsersInput, FindUsersOutput } from './dto/find-usres.dto';
 import { PAGE_NATION } from 'src/common/common.pagenation';
 import { TOTAL_PAGES } from '../common/common.pagenation';
 import { DeleteUserIntput, DeleteUserOutput } from './dto/delete-user.dto';
+import { LoginInput, LoginOutput } from './dto/login-user.dto';
+import { JwtService } from '../jwt/jwt.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly users: Repository<User>,
+    private readonly jwtService: JwtService,
   ) {}
   async createUser(
     { email, name, password, role }: CreateUserInput
@@ -187,6 +190,43 @@ export class UsersService {
     } catch {
       return {
         ok: false,
+        error: permossionError,
+      }
+    }
+  }
+
+  async login(
+    { email, password }: LoginInput,
+  ): Promise<LoginOutput> {
+    try {
+      const user = await this.users.findOne(
+        { email },
+        { select: ['id', 'password'] },
+      );
+
+      if (!user) {
+        return {
+          ok: false,
+          error: errorUser.wrongLogin,
+        };
+      }
+
+      const passwordCorrect = await user.checkPassword(password);
+      if (!passwordCorrect) {
+        return {
+          ok: false,
+          error: errorUser.wrongLogin,
+        };
+      }
+
+      const token = this.jwtService.sign({ id: user.id });
+      return {
+        ok: true,
+        token,
+      }
+    } catch {
+      return {
+        ok:false,
         error: permossionError,
       }
     }
