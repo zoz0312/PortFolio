@@ -30,6 +30,7 @@ export class UsersResolver {
     return this.usersService.findAll(findUsersInput);
   }
 
+  @Role(['Admin'])
   @Query(returns => FindUserOutput, { name: 'user' })
   async findOne(
     @Args('input') findUserInput: FindUserInput,
