@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, LoggerService } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { invalidError, permossionError } from 'src/common/error-text';
 import { Raw, Repository } from 'typeorm';
@@ -13,6 +13,7 @@ import { TOTAL_PAGES } from '../common/common.pagenation';
 import { DeleteUserIntput, DeleteUserOutput } from './dto/delete-user.dto';
 import { LoginInput, LoginOutput } from './dto/login-user.dto';
 import { JwtService } from '../jwt/jwt.service';
+import { MyLogger } from '../logger/logger.service';
 
 @Injectable()
 export class UsersService {
@@ -22,7 +23,7 @@ export class UsersService {
     private readonly jwtService: JwtService,
   ) {}
 
-  private readonly logger = new Logger(UsersService.name);
+  private readonly logger = new MyLogger(UsersService.name);
 
   async createUser(
     { email, name, password, role }: CreateUserInput
@@ -53,7 +54,10 @@ export class UsersService {
           role,
         })
       );
-      this.logger.log('create user')
+
+      this.logger.log({
+        message: 'create user'
+      })
 
       return {
         ok: true,

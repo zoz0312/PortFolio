@@ -1,26 +1,33 @@
-import { Logger } from '@nestjs/common';
+import { User } from 'src/users/entities/user.entity';
 
-export class MyLogger extends Logger {
-  log(message, context): void {
-    /* your implementation */
-    console.log('log msg =>', message);
-    console.log('log context=>', context)
+interface DefaultLog {
+  message: string,
+  user?: User,
+}
+
+export class MyLogger {
+  context?: string;
+
+  constructor(
+    context?: string
+  ) {
+    this.context = context;
+  };
+
+  log(log: DefaultLog): void {
+    // Insert DB
+    console.log('log', log);
+    console.log('context', this.context)
   }
-  error(message: string, trace: string) {
+
+  error(log: DefaultLog) {
     // add your tailored logic here
-    console.log('log error =>', message)
-    super.error(message, trace);
+    // console.log('log error =>', message)
+    // super.error(message, trace);
   }
-  warn(message: string) {
-    console.log('log warn =>', message)
-    /* your implementation */
-  }
-  debug(message: string) {
-    console.log('log debug =>', message)
-    /* your implementation */
-  }
-  verbose(message: string) {
-    console.log('log verbose =>', message)
+
+  warn(log: DefaultLog) {
+    // console.log('log warn =>', message)
     /* your implementation */
   }
 }
