@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
-import { UpdateUserInput } from './dto/update-user.input';
+import { UpdateUserInput, UpdateUserOutput } from './dto/update-user.input';
 import { CreateUserInput, CreateUserOutput } from './dto/create-user.dto';
 import { FindUserInput, FindUserOutput } from './dto/find-user.dto';
 import { FindUsersOutput, FindUsersInput } from './dto/find-usres.dto';
@@ -31,11 +31,11 @@ export class UsersResolver {
     return this.usersService.findOne(findUserInput);
   }
 
-  @Mutation(() => User)
-  updateUser(
-    @Args('updateUserInput') updateUserInput: UpdateUserInput
-  ) {
-    return this.usersService.update(updateUserInput.id, updateUserInput);
+  @Mutation(returns => UpdateUserOutput)
+  async updateUser(
+    @Args('input') updateUserInput: UpdateUserInput
+  ): Promise<UpdateUserOutput> {
+    return this.usersService.update(updateUserInput);
   }
 
   @Mutation(() => User)

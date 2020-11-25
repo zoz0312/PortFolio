@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { invalidError, permossionError } from 'src/common/error-text';
 import { Raw, Repository } from 'typeorm';
 import { CreateUserInput, CreateUserOutput } from './dto/create-user.dto';
-import { UpdateUserInput } from './dto/update-user.input';
+import { UpdateUserInput, UpdateUserOutput } from './dto/update-user.input';
 import { User, UserRole } from './entities/user.entity';
 import { errorUser } from './user-text';
 import { FindUserInput, FindUserOutput } from './dto/find-user.dto';
@@ -79,7 +79,6 @@ export class UsersService {
         where['role'] = role;
       }
 
-      console.log(12321321)
       const [users, totalResults] = await this.users.findAndCount({
         where,
         ...PAGE_NATION(findUsersInput.page),
@@ -117,8 +116,53 @@ export class UsersService {
     }
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
-    return `This action updates a #${id} user`;
+  async update(
+    { id, password, email, name, role, }: UpdateUserInput
+  ): Promise<UpdateUserOutput> {
+    try {
+      const user = await this.users.findOne({ id });
+
+      if (!user) {
+        return {
+          ok: false,
+          error: errorUser.noUser,
+        }
+      }
+
+      if (email) {
+        user.email = email;
+      }
+
+      if (name) {
+        user.name = name;
+      }
+
+      if (role) {
+        if (role === UserRole.Admin) {
+          return {
+            ok: false,
+            error: invalidError,
+          }
+        }
+        user.role = role;
+      }
+
+      if (password) {
+        // Validation password
+        user.password = password;
+      }
+
+      await this.users.save(user);
+
+      return {
+        ok: true,
+      }
+    } catch {
+      return {
+        ok: false,
+        error: permossionError,
+      }
+    }
   }
 
   remove(id: number) {
