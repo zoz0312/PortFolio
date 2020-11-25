@@ -1,9 +1,10 @@
 import { Logger } from '@nestjs/common';
 
 export class MyLogger extends Logger {
-  log(message: string) {
+  log(message, context): void {
     /* your implementation */
-    console.log('log msg =>', message)
+    console.log('log msg =>', message);
+    console.log('log context=>', context)
   }
   error(message: string, trace: string) {
     // add your tailored logic here
