@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { invalidError, permossionError } from 'src/common/error-text';
 import { Raw, Repository } from 'typeorm';
@@ -21,6 +21,9 @@ export class UsersService {
     private readonly users: Repository<User>,
     private readonly jwtService: JwtService,
   ) {}
+
+  private readonly logger = new Logger(UsersService.name);
+
   async createUser(
     { email, name, password, role }: CreateUserInput
   ): Promise<CreateUserOutput> {
@@ -50,6 +53,7 @@ export class UsersService {
           role,
         })
       );
+      this.logger.log('create user')
 
       return {
         ok: true,

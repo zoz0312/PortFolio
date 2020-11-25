@@ -8,6 +8,7 @@ import { CommonModule } from './common/common.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from './jwt/jwt.module';
 import { AuthModule } from './auth/auth.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { AuthModule } from './auth/auth.module';
     UsersModule,
     AuthModule,
     CommonModule,
+    LoggerModule,
   ],
   controllers: [],
   providers: [],
