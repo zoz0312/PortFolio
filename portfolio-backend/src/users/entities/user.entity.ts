@@ -6,7 +6,7 @@ import { BeforeInsert, BeforeUpdate, Column, Entity } from "typeorm";
 import { InternalServerErrorException } from '@nestjs/common';
 
 export enum UserRole {
-  Gest = 'Gest',
+  Guest = 'Guest',
   Company = 'Company',
   Admin = 'Admin',
 };

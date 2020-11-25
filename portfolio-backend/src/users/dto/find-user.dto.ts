@@ -10,6 +10,6 @@ export class FindUserInput {
 
 @ObjectType()
 export class FindUserOutput extends CoreOutput {
-  @Field(type => User)
+  @Field(type => User, { nullable: true })
   user?: User;
 }

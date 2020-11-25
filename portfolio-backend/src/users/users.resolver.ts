@@ -7,6 +7,8 @@ import { FindUserInput, FindUserOutput } from './dto/find-user.dto';
 import { FindUsersOutput, FindUsersInput } from './dto/find-usres.dto';
 import { DeleteUserOutput, DeleteUserIntput } from './dto/delete-user.dto';
 import { LoginOutput, LoginInput } from './dto/login-user.dto';
+import { Role } from 'src/auth/auth.role-decorator';
+import { AuthUser } from 'src/auth/auth.user-decorator';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -19,8 +21,10 @@ export class UsersResolver {
     return this.usersService.createUser(createUserInput);
   }
 
+  @Role(['Admin'])
   @Query(returns => FindUsersOutput, { name: 'users' })
   async findAll(
+    // @AuthUser() user: User,
     @Args('input') findUsersInput: FindUsersInput,
   ): Promise<FindUsersOutput> {
     return this.usersService.findAll(findUsersInput);
