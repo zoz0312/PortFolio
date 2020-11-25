@@ -17,14 +17,14 @@ import { MyLoggerService } from '../logger/logger.service';
 
 @Injectable()
 export class UsersService {
+  contextName: string = UsersService.name;
+
   constructor(
     @InjectRepository(User)
     private readonly users: Repository<User>,
     private readonly jwtService: JwtService,
-    // private readonly logger: MyLoggerService,
-  ) {
-    // this.logger.setContext(UsersService.name);
-  }
+    private readonly logger: MyLoggerService,
+  ) {}
 
   async createUser(
     { email, name, password, role }: CreateUserInput
@@ -56,9 +56,10 @@ export class UsersService {
         })
       );
 
-      // this.logger.log({
-      //   message: 'create user'
-      // })
+      this.logger.log({
+        message: 'create user',
+        context: this.contextName,
+      })
 
       return {
         ok: true,

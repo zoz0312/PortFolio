@@ -2,15 +2,23 @@ import { Inject, Injectable } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { CONFIG_OPTIONS } from '../common/common.variables';
 import { JwtModuleOptions } from './jwt.interface';
+import { MyLoggerService } from '../logger/logger.service';
 
 
 @Injectable()
 export class JwtService {
+  contextName: string = JwtService.name;
+
   constructor (
-    @Inject(CONFIG_OPTIONS) private readonly options: JwtModuleOptions
+    @Inject(CONFIG_OPTIONS) private readonly options: JwtModuleOptions,
+    private readonly logger: MyLoggerService,
   ) {}
 
   sign(payload: object): string {
+    this.logger.log({
+      message: 'Sign jwt',
+      context: this.contextName,
+    })
     return jwt.sign(payload, this.options.privateKey);
   }
 

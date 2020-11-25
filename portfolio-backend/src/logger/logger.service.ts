@@ -1,43 +1,49 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
-import { GraphqlLogger } from './entities/logger.graphql';
+import { GraphqlLogger, LogLevel } from './entities/logger.graphql';
 import { Injectable } from '@nestjs/common';
 
 interface DefaultLog {
   message: string,
+  context: string,
   user?: User,
 }
 
 @Injectable()
 export class MyLoggerService {
-  context?: string;
-
   constructor(
     @InjectRepository(GraphqlLogger)
     private readonly graphqlLogger: Repository<GraphqlLogger>,
   ) {};
 
-  log(log: DefaultLog): void {
-    // Insert DB
-    console.log('graphqlLogger,', this.graphqlLogger)
-    // this.graphqlLogger.create();
-    console.log('log', log);
-    // console.log('context', this.context)
+  log({ message, context, user }: DefaultLog): void {
+    const inputData = {
+      message,
+      logLevel: LogLevel.log
+    };
+    if (user) {
+      inputData['userId'] = user.id;
+    }
+    if (context) {
+      inputData['context'] = context;
+    }
+    this.graphqlLogger.save(this.graphqlLogger.create(inputData));
   }
 
-  error(log: DefaultLog) {
-    // add your tailored logic here
-    // console.log('log error =>', message)
-    // super.error(message, trace);
+  error({ message, context, user }: DefaultLog) {
+    const inputData = { message };
+    if (user) {
+      inputData['userId'] = user.id;
+    }
+    if (context) {
+      inputData['context'] = context;
+    }
+    this.graphqlLogger.save(this.graphqlLogger.create(inputData));
   }
 
-  warn(log: DefaultLog) {
+  warning(log: DefaultLog) {
     // console.log('log warn =>', message)
     /* your implementation */
-  }
-
-  setContext(context: string) {
-    this.context = context;
   }
 }

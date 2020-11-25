@@ -1,6 +1,6 @@
 import { Field, InputType, ObjectType } from "@nestjs/graphql";
 import { IsIP } from "class-validator";
-import { CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 
 @InputType('GlobalLoggerType', { isAbstract: true })
@@ -15,19 +15,24 @@ export class GlobalLogger {
   @Field(type => Date)
   createdAt: Date;
 
+  @Column()
   @Field(type => String)
   @IsIP()
   host: string;
 
+  @Column()
   @Field(type => String)
   referer: string;
 
+  @Column()
   @Field(type => String)
   method: string;
 
+  @Column({ nullable: true })
   @Field(type => String, { nullable: true })
   useragent?: string;
 
+  @Column({ nullable: true })
   @Field(type => String, { nullable: true })
   body?: string;
 }
