@@ -24,32 +24,36 @@ export class UsersResolver {
   @Role(['Admin'])
   @Query(returns => FindUsersOutput, { name: 'users' })
   async findAll(
-    // @AuthUser() user: User,
+    @AuthUser() user: User,
     @Args('input') findUsersInput: FindUsersInput,
   ): Promise<FindUsersOutput> {
-    return this.usersService.findAll(findUsersInput);
+    return this.usersService.findAll(user, findUsersInput);
   }
 
   @Role(['Admin'])
   @Query(returns => FindUserOutput, { name: 'user' })
-  async findOne(
+  async findUser(
     @Args('input') findUserInput: FindUserInput,
   ): Promise<FindUserOutput> {
-    return this.usersService.findOne(findUserInput);
+    return this.usersService.findUser(findUserInput);
   }
 
+  @Role(['Any'])
   @Mutation(returns => UpdateUserOutput)
   async updateUser(
+    @AuthUser() user: User,
     @Args('input') updateUserInput: UpdateUserInput,
   ): Promise<UpdateUserOutput> {
-    return this.usersService.update(updateUserInput);
+    return this.usersService.update(user, updateUserInput);
   }
 
+  @Role(['Any'])
   @Mutation(returns => DeleteUserOutput)
   async deleteUser(
+    @AuthUser() user: User,
     @Args('input') deleteUserIntput: DeleteUserIntput,
   ): Promise<DeleteUserOutput> {
-    return this.usersService.delete(deleteUserIntput);
+    return this.usersService.deleteUser(user, deleteUserIntput);
   }
 
   @Query(returns => LoginOutput)

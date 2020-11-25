@@ -8,6 +8,7 @@ interface DefaultLog {
   message: string,
   context: string,
   user?: User,
+  error?: string,
 }
 
 @Injectable()
@@ -31,8 +32,11 @@ export class MyLoggerService {
     this.graphqlLogger.save(this.graphqlLogger.create(inputData));
   }
 
-  error({ message, context, user }: DefaultLog) {
-    const inputData = { message };
+  warning({ message, context, user }: DefaultLog) {
+    const inputData = {
+      message,
+      logLevel: LogLevel.warning,
+    };
     if (user) {
       inputData['userId'] = user.id;
     }
@@ -42,8 +46,17 @@ export class MyLoggerService {
     this.graphqlLogger.save(this.graphqlLogger.create(inputData));
   }
 
-  warning(log: DefaultLog) {
-    // console.log('log warn =>', message)
-    /* your implementation */
+  error({ message, context, user }: DefaultLog) {
+    const inputData = {
+      message,
+      logLevel: LogLevel.error,
+    };
+    if (user) {
+      inputData['userId'] = user.id;
+    }
+    if (context) {
+      inputData['context'] = context;
+    }
+    this.graphqlLogger.save(this.graphqlLogger.create(inputData));
   }
 }

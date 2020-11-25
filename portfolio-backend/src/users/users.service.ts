@@ -47,7 +47,7 @@ export class UsersService {
         }
       }
 
-      await this.users.save(
+      const createdUser = await this.users.save(
         this.users.create({
           email,
           name,
@@ -57,14 +57,19 @@ export class UsersService {
       );
 
       this.logger.log({
-        message: 'create user',
+        message: `${createdUser.email} 유저 생성완료`,
         context: this.contextName,
-      })
+      });
 
       return {
         ok: true,
       }
-    } catch {
+    } catch (error) {
+      this.logger.error({
+        message: `유저 생성 실패`,
+        context: this.contextName,
+        error,
+      });
       return {
         ok: false,
         error: permossionError,
@@ -73,6 +78,7 @@ export class UsersService {
   }
 
   async findAll(
+    user: User,
     findUsersInput: FindUsersInput,
   ): Promise<FindUsersOutput> {
     try {
@@ -99,13 +105,24 @@ export class UsersService {
         order: { id: 'ASC' }
       });
 
+      this.logger.log({
+        message: 'Find User All',
+        context: this.contextName,
+        user,
+      });
+
       return {
         ok: true,
         users,
         totalResults,
         totalPages: TOTAL_PAGES(totalResults),
       }
-    } catch {
+    } catch (error) {
+      this.logger.error({
+        message: `전체유저 찾기 실패`,
+        context: this.contextName,
+        error,
+      });
       return {
         ok: false,
         error: permossionError,
@@ -113,42 +130,78 @@ export class UsersService {
     }
   }
 
-  async findOne(
+  async findUser(
     { id }: FindUserInput
   ): Promise<FindUserOutput> {
     try {
-      const user = await this.users.findOneOrFail({ id });
+      const findUser = await this.users.findOneOrFail({ id });
+      this.logger.log({
+        message: 'Find User',
+        context: this.contextName,
+      });
       return {
         ok: true,
-        user,
+        user: findUser,
       }
-    } catch {
+    } catch (error) {
+      this.logger.error({
+        message: `유저 찾기 실패`,
+        context: this.contextName,
+        error,
+      });
       return {
         ok: false,
         error: permossionError,
       }
+    }
+  }
+
+  async findById(id: number) {
+    try {
+      const findUser = await this.users.findOne({ id });
+      return { user: findUser }
+    } catch {
+      return { user: undefined }
     }
   }
 
   async update(
+    user: User,
     { id, password, email, name, role, }: UpdateUserInput
   ): Promise<UpdateUserOutput> {
     try {
-      const user = await this.users.findOne({ id });
+      const findUser = await this.users.findOne({ id });
 
-      if (!user) {
+      if (!findUser) {
+        this.logger.log({
+          message: `업데이트 유저 검색 실패`,
+          context: this.contextName,
+          user,
+        });
         return {
           ok: false,
           error: errorUser.noUser,
         }
       }
 
+      if (findUser.id !== user.id) {
+        this.logger.log({
+          message: `다른 유저 업데이트 시도`,
+          context: this.contextName,
+          user,
+        });
+        return {
+          ok: false,
+          error: errorUser.noUpdatePermission,
+        }
+      }
+
       if (email) {
-        user.email = email;
+        findUser.email = email;
       }
 
       if (name) {
-        user.name = name;
+        findUser.name = name;
       }
 
       if (role) {
@@ -158,20 +211,31 @@ export class UsersService {
             error: invalidError,
           }
         }
-        user.role = role;
+        findUser.role = role;
       }
 
       if (password) {
         // Validation password
-        user.password = password;
+        findUser.password = password;
       }
 
-      await this.users.save(user);
+      const modifiedUser = await this.users.save(findUser);
+
+      this.logger.log({
+        message: `${modifiedUser.email} 유저 수정완료`,
+        context: this.contextName,
+        user,
+      });
 
       return {
         ok: true,
       }
-    } catch {
+    } catch (error) {
+      this.logger.error({
+        message: `유저 업데이트 실패`,
+        context: this.contextName,
+        error,
+      });
       return {
         ok: false,
         error: permossionError,
@@ -179,25 +243,54 @@ export class UsersService {
     }
   }
 
-  async delete(
+  async deleteUser(
+    user: User,
     { id }: DeleteUserIntput,
   ): Promise<DeleteUserOutput> {
     try {
-      const user = await this.users.findOne({ id });
+      const findUser = await this.users.findOne({ id });
 
-      if (!user) {
+      if (!findUser) {
+        this.logger.log({
+          message: `삭제 유저 검색 실패`,
+          context: this.contextName,
+          user,
+        });
         return {
           ok: false,
           error: errorUser.noUser,
         }
       }
 
+      if (findUser.id !== user.id) {
+        this.logger.log({
+          message: `다른 유저 삭제 시도`,
+          context: this.contextName,
+          user,
+        });
+        return {
+          ok: false,
+          error: errorUser.noDeletePermission,
+        }
+      }
+
       await this.users.softDelete({ id });
+
+      this.logger.log({
+        message: `${findUser.email} 유저 삭제 완료`,
+        context: this.contextName,
+        user,
+      });
 
       return {
         ok: true,
       }
-    } catch {
+    } catch (error) {
+      this.logger.error({
+        message: `유저 삭제 실패`,
+        context: this.contextName,
+        error,
+      });
       return {
         ok: false,
         error: permossionError,
@@ -215,6 +308,10 @@ export class UsersService {
       );
 
       if (!user) {
+        this.logger.log({
+          message: `존재하지 않는 유저로 로그인 시도`,
+          context: this.contextName,
+        });
         return {
           ok: false,
           error: errorUser.wrongLogin,
@@ -223,6 +320,11 @@ export class UsersService {
 
       const passwordCorrect = await user.checkPassword(password);
       if (!passwordCorrect) {
+        this.logger.log({
+          message: `${user.email} 패스워드 오류`,
+          context: this.contextName,
+          user,
+        });
         return {
           ok: false,
           error: errorUser.wrongLogin,
@@ -230,11 +332,21 @@ export class UsersService {
       }
 
       const token = this.jwtService.sign({ id: user.id });
+      this.logger.log({
+        message: `${user.email} 로그인 성공 및 토큰 발급`,
+        context: this.contextName,
+        user,
+      });
       return {
         ok: true,
         token,
       }
-    } catch {
+    } catch (error) {
+      this.logger.error({
+        message: `로그인 에러 발생`,
+        context: this.contextName,
+        error,
+      });
       return {
         ok:false,
         error: permossionError,

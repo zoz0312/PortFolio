@@ -3,4 +3,6 @@ export const errorUser = {
   wrongLogin: `아이디 또는 비밀번호가 잘못되었습니다.`,
   alreadyEmail: `이미 존재하는 Email 입니다.`,
   searchLength: `최소 3글자 이상 입력해주세요.`,
+  noUpdatePermission: `수정할 권한이 없습니다.`,
+  noDeletePermission: `삭제할 권한이 없습니다.`,
 }
