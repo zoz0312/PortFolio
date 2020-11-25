@@ -5,6 +5,7 @@ import { UpdateUserInput, UpdateUserOutput } from './dto/update-user.input';
 import { CreateUserInput, CreateUserOutput } from './dto/create-user.dto';
 import { FindUserInput, FindUserOutput } from './dto/find-user.dto';
 import { FindUsersOutput, FindUsersInput } from './dto/find-usres.dto';
+import { DeleteUserOutput, DeleteUserIntput } from './dto/delete-user.dto';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -33,15 +34,15 @@ export class UsersResolver {
 
   @Mutation(returns => UpdateUserOutput)
   async updateUser(
-    @Args('input') updateUserInput: UpdateUserInput
+    @Args('input') updateUserInput: UpdateUserInput,
   ): Promise<UpdateUserOutput> {
     return this.usersService.update(updateUserInput);
   }
 
-  @Mutation(() => User)
-  removeUser(
-    @Args('id', { type: () => Int }) id: number
-  ) {
-    return this.usersService.remove(id);
+  @Mutation(returns => DeleteUserOutput)
+  async deleteUser(
+    @Args('input') deleteUserIntput: DeleteUserIntput,
+  ): Promise<DeleteUserOutput> {
+    return this.usersService.delete(deleteUserIntput);
   }
 }

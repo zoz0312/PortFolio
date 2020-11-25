@@ -10,6 +10,7 @@ import { FindUserInput, FindUserOutput } from './dto/find-user.dto';
 import { FindUsersInput, FindUsersOutput } from './dto/find-usres.dto';
 import { PAGE_NATION } from 'src/common/common.pagenation';
 import { TOTAL_PAGES } from '../common/common.pagenation';
+import { DeleteUserIntput, DeleteUserOutput } from './dto/delete-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -165,7 +166,29 @@ export class UsersService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async delete(
+    { id }: DeleteUserIntput,
+  ): Promise<DeleteUserOutput> {
+    try {
+      const user = await this.users.findOne({ id });
+
+      if (!user) {
+        return {
+          ok: false,
+          error: errorUser.noUser,
+        }
+      }
+
+      await this.users.softDelete({ id });
+
+      return {
+        ok: true,
+      }
+    } catch {
+      return {
+        ok: false,
+        error: permossionError,
+      }
+    }
   }
 }
