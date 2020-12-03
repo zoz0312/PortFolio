@@ -1,16 +1,16 @@
 .frame-enter {
   // position: absolute;
-  opacity: 0;
+  // opacity: 0;
 }
 .frame-enter-active {
-  opacity: 1;
-  transition: opacity .5s;
+  // opacity: 1;
+  // transition: opacity .5s;
 }
 .frame-exit {
   // position: absolute;
-  opacity: 1;
+  // opacity: 1;
 }
 .frame-exit-active {
-  opacity: 0;
-  transition: opacity .5s;
+  // opacity: 0;
+  // transition: opacity .5s;
 }

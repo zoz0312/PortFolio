@@ -13,15 +13,15 @@ const MainAnimation: React.FC<Props> = (
 ): JSX.Element => {
   return (
     <>
-      <TransitionGroup>
+      {/* <TransitionGroup>
         <CSSTransition
           key={location?.key}
           timeout={500}
           classNames="frame"
-        >
+        > */}
           {children}
-        </CSSTransition>
-      </TransitionGroup>
+        {/* </CSSTransition>
+      </TransitionGroup> */}
     </>
   );
 }
