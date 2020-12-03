@@ -333,7 +333,7 @@ export class UsersService {
 
       const token = this.jwtService.sign({ id: user.id });
       this.logger.log({
-        message: `${user.email} 로그인 성공 및 토큰 발급`,
+        message: `${email} 로그인 성공`,
         context: this.contextName,
         user,
       });

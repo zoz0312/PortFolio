@@ -1,12 +1,12 @@
 import React from 'react';
 
-const AJuAbout: React.FC = (
+const AdminHome: React.FC = (
 ): JSX.Element => {
   return (
     <>
-    AJu About
+      UserHome
     </>
   );
 }
 
-export default AJuAbout;
+export default AdminHome;

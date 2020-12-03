@@ -16,7 +16,7 @@ export class JwtService {
 
   sign(payload: object): string {
     this.logger.log({
-      message: 'Sign jwt',
+      message: 'JWT 발급',
       context: this.contextName,
     })
     return jwt.sign(payload, this.options.privateKey);

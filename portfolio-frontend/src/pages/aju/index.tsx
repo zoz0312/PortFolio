@@ -1,6 +1,6 @@
 import { Route, RouteComponentProps } from "react-router-dom"
 import Home from './aju.Home';
-import About from './aju.About';
+import AJuAbout from './aju.About';
 import MainAnimation from '@components/animations/main.animation';
 
 const AJu: React.FC<RouteComponentProps> = (
@@ -9,7 +9,7 @@ const AJu: React.FC<RouteComponentProps> = (
   return (
     <>
       <Route exact path={`${match.path}`} component={Home} />
-      <Route path={`${match.path}/about`} component={About} />
+      <Route path={`${match.path}/about`} component={AJuAbout} />
     </>
   );
 }

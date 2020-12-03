@@ -12,7 +12,7 @@ const MainAnimation: React.FC<Props> = (
   { children, location }
 ): JSX.Element => {
   return (
-    <div className="container">
+    <>
       <TransitionGroup>
         <CSSTransition
           key={location?.key}
@@ -22,7 +22,7 @@ const MainAnimation: React.FC<Props> = (
           {children}
         </CSSTransition>
       </TransitionGroup>
-    </div>
+    </>
   );
 }
 
